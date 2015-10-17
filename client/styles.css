@@ -3,3 +3,18 @@
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
 
+.enemy {
+  /*display: inline-block;*/
+  width: 200px;
+  height: 200px;
+  background-color: black;
+}
+img {
+  width: 200px;
+  height: 200px;
+}
+
+.board {
+  background-image: url('http://cdni.wired.co.uk/1240x826/s_v/space_11.jpg');
+  background-size:cover;
+}
