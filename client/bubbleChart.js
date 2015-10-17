@@ -60,11 +60,11 @@ var dataSet = [{"country":"Australia","continent":"Oceania","population":22319.0
 
   var highestGrowth = d3.max(growthNums);
   var lowestGrowth = d3.min(growthNums);
-  var linearGrowthScale = d3.scale.linear().domain([lowestGrowth, highestGrowth]).range([0, 400]);
+  var linearGrowthScale = d3.scale.linear().domain([lowestGrowth - 1, highestGrowth]).range([0, 400]);
 
   var highestGERD = d3.max(GERDNums);
   var lowestGERD = d3.min(GERDNums);
-  var linearGERDScale = d3.scale.linear().domain([lowestGERD, highestGERD]).range([0, 700]);
+  var linearGERDScale = d3.scale.linear().domain([lowestGERD - 1, highestGERD]).range([0, 700]);
 
   var highestGDP = d3.max(GDParray);
   var linearGDPScale = d3.scale.linear().domain([0, highestGDP]).range([0,100]);
@@ -89,6 +89,44 @@ var dataSet = [{"country":"Australia","continent":"Oceania","population":22319.0
         });      
     });
 
+var GERDisX = true;
+    d3.select('.flipGraphButtonPop')
+    .on('click', function(){
+      var newXAxis;
+      var newYAxis;
+      var newXMeasure;
+      var newYMeasure;
+      if(GERDisX){
+        newYAxis = d3.scale.linear().domain([lowestGERD, highestGERD]).range([0, 400]);
+        newXAxis = d3.scale.linear().domain([lowestGrowth, highestGrowth]).range([0, 700]);
+      } else {
+        newYAxis = d3.scale.linear().domain([lowestGrowth, highestGrowth]).range([0, 400]);
+        newXAxis = d3.scale.linear().domain([lowestGERD, highestGERD]).range([0, 700]);
+      }
+
+      chart.selectAll('circle').data(dataSet)
+        .transition().duration(1000)
+        .attr('cx', function(d){
+          
+          if(GERDisX){
+            GERDisX = !GERDisX;
+            return newXAxis(d.growth);
+          } else {
+            GERDisX = !GERDisX;
+            return newXAxis(d.GERD);
+          }
+        })
+        .attr('cy', function(d){
+          if(!GERDisX){
+            GERDisX = !GERDisX;
+            return newYAxis(d.GERD);
+          } else {
+            GERDisX = !GERDisX;
+            return newYAxis(d.growth);
+          }
+        });      
+    });
+
   chart.selectAll('circle').data(dataSet).enter()
     .append('circle')
     .attr('cx', function(d) {
@@ -101,10 +139,8 @@ var dataSet = [{"country":"Australia","continent":"Oceania","population":22319.0
       return 1;
     })
     .on('mouseover', function(d){
-      console.log(linearGERDScale(d.GERD));
-      d3.select('.infoDisplay').style('visibility', 'visible');
       d3.select('.infoDisplay')
-        .attr('margin-left', '' + linearGERDScale(d.GERD) + 'px')
+        .style('visibility', 'visible')
         .text(d.country);
     })
     .on('mouseout', function(d){
