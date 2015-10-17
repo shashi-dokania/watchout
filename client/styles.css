@@ -20,8 +20,8 @@ img {
 }
 
 .bubbleChart {
-  width: 700px;
-  height: 400px;
+  width: 800px;
+  height: 450px;
   margin-top: 200px;
   border: solid 2px black;
 }
@@ -29,9 +29,22 @@ img {
 .infoDisplay {
   width: 100px;
   height: 100px;
-  border: solid 1px black;
   background-color: teal;
+  color: white;
   visibility: hidden;
   position: absolute;
-  margin-left: 400px;
+  margin-left: 50px;
+  border-radius: 50px;
+  line-height: 100px;
+}
+
+.pieChart {
+  margin-top: 50px;
+  width: 400px;
+  height: 400px;
+  border: solid 1px blue;
+}
+
+.reGraphButton {
+  color:maroon;  
 }

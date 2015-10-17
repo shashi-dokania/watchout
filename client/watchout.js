@@ -4,9 +4,9 @@
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   gameOptions = {
-    height: 450,
-    width: 730,
-    nEnemies: 30,
+    height: 550,
+    width: 950,
+    nEnemies: 50,
     padding: 20
   };
 

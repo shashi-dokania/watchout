@@ -1,4 +1,5 @@
 (function(){
+
 var dataSet = [{"country":"Australia","continent":"Oceania","population":22319.07,"GDPcap":40718.78167,"GERD":2.21367,"growth":2.48590317},
   {"country":"Austria","continent":"Europe","population":8427.318,"GDPcap":42118.46375,"GERD":2.74826,"growth":3.10741128},
   {"country":"Belgium","continent":"Europe","population":10590.44,"GDPcap":38809.66436,"GERD":1.96158,"growth":1.89308521},
@@ -35,108 +36,37 @@ var dataSet = [{"country":"Australia","continent":"Oceania","population":22319.0
   {"country":"United Kingdom","continent":"Europe","population":62761.35,"GDPcap":35715.4691,"GERD":1.82434,"growth":2.09209263},
   {"country":"United States","continent":"America","population":313232,"GDPcap":46587.61843,"GERD":2.78518,"growth":3.02171711}];
 
+var colorSet = {"Europe": 'green', "Oceania": 'teal', "America": 'red', "Asia": 'blue', "Africa": 'orange'};
 
-  var colorSet = {"Europe": 'green', "Oceania": 'teal', "America": 'red', "Asia": 'blue', "Africa": 'orange'};
-  var populations = [];
-  var growthNums = [];
-  var GERDNums = [];
-  var GDParray = [];
-  for(var i = 0; i < dataSet.length; i++){  
-    for(var key in dataSet[i]){
-      if(key === 'population'){
-        populations.push(dataSet[i][key]);
-      } else if(key === 'GERD'){
-        GERDNums.push(dataSet[i][key]);
-      } else if(key === 'growth'){
-        growthNums.push(dataSet[i][key]);
-      } else if(key ==='GDPcap'){
-        GDParray.push(dataSet[i][key]);
-      }
-    }
-  }
+var width = 400;
+var height = 400;
+var radius = height / 2;
 
-  var highestPopulation = d3.max(populations);
-  var linearPopulationScale = d3.scale.linear().domain([0, highestPopulation]).range([0, 100]);
+var svg = d3.select('.pieChart').append('svg')
+  .attr('width', width)
+  .attr('height', height)
+  .append('g')
+  .attr('transform', 'translate(' + (width/2) + ',' + (height / 2) + ')');
 
-  var highestGrowth = d3.max(growthNums);
-  var lowestGrowth = d3.min(growthNums);
-  var linearGrowthScale = d3.scale.linear().domain([lowestGrowth, highestGrowth]).range([0, 400]);
+var arc = d3.svg.arc().outerRadius(radius);
 
-  var highestGERD = d3.max(GERDNums);
-  var lowestGERD = d3.min(GERDNums);
-  var linearGERDScale = d3.scale.linear().domain([lowestGERD, highestGERD]).range([0, 700]);
+var pie = d3.layout.pie()
+  .value(function(d){
+    return d.population;
+  });
 
-  var highestGDP = d3.max(GDParray);
-  var linearGDPScale = d3.scale.linear().domain([0, highestGDP]).range([0,100]);
 
-  var chart = d3.select('.bubbleChart').append('svg:svg').attr('width', 800).attr('height', 450);
 
-  d3.select('.reGraphButton')
-    .on('click', function(){
-      chart.selectAll('circle').data(dataSet)
-        .transition().duration(1000)
-        .attr('r', function(d){
-          return linearGDPScale(d.GDPcap);
-        });      
-    });
+var path = svg.selectAll('path')
+  .data(pie(dataSet.slice(dataSet.length/4,dataSet.length/2)))
+  .enter().append('path')
+  .attr('d', arc)
+  .attr('fill-opacity', '0')
+  .attr('fill', function(d){
+    //console.log(d);
+    return colorSet[d.data.continent];
+  })
+  .transition().duration(1500)
+  .attr('fill-opacity', '0.9');
 
-    d3.select('.reGraphButtonPop')
-    .on('click', function(){
-      chart.selectAll('circle').data(dataSet)
-        .transition().duration(1000)
-        .attr('r', function(d){
-          return linearPopulationScale(d.population);
-        });      
-    });
-
-  chart.selectAll('circle').data(dataSet).enter()
-    .append('circle')
-    .attr('cx', function(d) {
-      return 0;
-    })
-    .attr('cy', function(d){
-      return 0;
-    })
-    .attr('r', function(d){
-      return 1;
-    })
-    .on('mouseover', function(d){
-      console.log(linearGERDScale(d.GERD));
-      d3.select('.infoDisplay').style('visibility', 'visible');
-      d3.select('.infoDisplay')
-        .attr('margin-left', '' + linearGERDScale(d.GERD) + 'px')
-        .text(d.country);
-    })
-    .on('mouseout', function(d){
-      d3.select('.infoDisplay').style('visibility', 'hidden');
-      d3.select('.infoDisplay').text("");
-    })
-    .style('background-color', 'green')
-    .style('fill-opacity', 0.3)
-    .style('fill', function(d){
-      return colorSet[d.continent];
-    });
-
-    chart.selectAll('circle').data(dataSet).transition().duration(1000)
-    .ease('elastic')
-    .attr('cx', function(d) {
-      return linearGERDScale(d.GERD);
-    })
-    .attr('cy', function(d){
-      return 0;
-      //return linearGrowthScale(d.growth);
-    })
-    .attr('r', function(d){
-      return linearPopulationScale(d.population);
-    });
-
-    chart.selectAll('circle').data(dataSet).transition().duration(1000)
-    .delay(1000)
-    .attr('cy', function(d){
-      return linearGrowthScale(d.growth);
-    })
-    .attr('r', function(d){
-      return linearPopulationScale(d.population);
-    });
-
-  }).call(this);
+}).call(this);
