@@ -18,3 +18,20 @@ img {
   background-image: url('http://cdni.wired.co.uk/1240x826/s_v/space_11.jpg');
   background-size:cover;
 }
+
+.bubbleChart {
+  width: 700px;
+  height: 400px;
+  margin-top: 200px;
+  border: solid 2px black;
+}
+
+.infoDisplay {
+  width: 100px;
+  height: 100px;
+  border: solid 1px black;
+  background-color: teal;
+  visibility: hidden;
+  position: absolute;
+  margin-left: 400px;
+}
