@@ -89,39 +89,37 @@ var dataSet = [{"country":"Australia","continent":"Oceania","population":22319.0
         });      
     });
 
-var GERDisX = true;
-    d3.select('.flipGraphButtonPop')
-    .on('click', function(){
-      var newXAxis;
-      var newYAxis;
-      var newXMeasure;
-      var newYMeasure;
+var GERDisX = false;
+    d3.select('.flipGraphButton')
+    .on('click', function(event){
+      /*
+      var newYAxis = d3.scale.linear().domain([lowestGERD, highestGERD]).range([0, 400]);
+      var newXAxis = d3.scale.linear().domain([lowestGrowth, highestGrowth]).range([0, 700]);
+      */
       if(GERDisX){
-        newYAxis = d3.scale.linear().domain([lowestGERD, highestGERD]).range([0, 400]);
-        newXAxis = d3.scale.linear().domain([lowestGrowth, highestGrowth]).range([0, 700]);
+        newYAxis = d3.scale.linear().domain([lowestGrowth - 1, highestGrowth]).range([0, 400]);
+        newXAxis = d3.scale.linear().domain([lowestGERD - 1, highestGERD]).range([0, 700]);
       } else {
-        newYAxis = d3.scale.linear().domain([lowestGrowth, highestGrowth]).range([0, 400]);
-        newXAxis = d3.scale.linear().domain([lowestGERD, highestGERD]).range([0, 700]);
+        newYAxis = d3.scale.linear().domain([lowestGERD - 1, highestGERD]).range([0, 400]);
+        newXAxis = d3.scale.linear().domain([lowestGrowth - 1, highestGrowth]).range([0, 700]);
       }
-
+      
+      GERDisX = !GERDisX;
       chart.selectAll('circle').data(dataSet)
         .transition().duration(1000)
         .attr('cx', function(d){
+          console.log(GERDisX);
           
           if(GERDisX){
-            GERDisX = !GERDisX;
             return newXAxis(d.growth);
           } else {
-            GERDisX = !GERDisX;
             return newXAxis(d.GERD);
           }
         })
         .attr('cy', function(d){
-          if(!GERDisX){
-            GERDisX = !GERDisX;
+          if(GERDisX){
             return newYAxis(d.GERD);
           } else {
-            GERDisX = !GERDisX;
             return newYAxis(d.growth);
           }
         });      
